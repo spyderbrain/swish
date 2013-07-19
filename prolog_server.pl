@@ -93,10 +93,15 @@ begin_session(SessionId) :-
 
 end_session(SessionId) :-
     catch(thread_signal(SessionId, abort), _, true),
-    output_queue(Output),
-    message_queue_destroy(Output),
-    forall(current_predicate(SessionId:PI), abolish(SessionId:PI)).    
-    
+    atom_concat(SessionId, '.out', Output),
+    catch(message_queue_destroy(Output), _, true),
+    forall(current_predicate(SessionId:PI),
+        (   memberchk(PI, [read/1, write/1, writeln/1, nl/0])
+        ->  true
+        ;   abolish(SessionId:PI)
+        )
+    ).    
+
 
 %%  input_queue(-QueueName) is det.
 %
