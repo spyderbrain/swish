@@ -100,7 +100,7 @@ end_session(SessionId) :-
         ->  true
         ;   abolish(SessionId:PI)
         )
-    ).    
+    ).
 
 
 %%  input_queue(-QueueName) is det.
