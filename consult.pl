@@ -19,12 +19,21 @@
 
 
 consult(Request) :-
+    http_session_id(SessionId),
+    (   thread_property(SID, status(running)),
+        SessionId == SID
+    ->  catch(thread_signal(SessionId, abort), _, true),
+        sleep(0.5)
+    ;   true
+    ),
     catch(consult_1(Request), Error, true),
     (   var(Error)
     ->  true
     ;   message_to_string(Error, Msg),
         reply_json(json([success= @false, message=Msg]), [width(0)])
     ).
+
+
 
 
 consult_1(Request) :-

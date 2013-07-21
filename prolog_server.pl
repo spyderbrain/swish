@@ -18,7 +18,7 @@
 
 :- use_module(sandbox).
 
-:- debug(pengine).
+%:- debug(pengine).
 
 
 /** <module> Prolog Web Server
@@ -84,7 +84,9 @@ server(Port) :-
 begin_session(SessionId) :-
     debug(pengine, 'Begin session: ~q', [SessionId]),
     atom_concat(SessionId, '.out', Output),
+    atom_concat(SessionId, '.comm', Communication),
     message_queue_create(Output),
+    message_queue_create(Communication),
     prepare_module(SessionId).    
 
 
@@ -98,7 +100,9 @@ end_session(SessionId) :-
     debug(pengine, 'End session: ~q', [SessionId]),
     catch(thread_signal(SessionId, abort), _, true),
     atom_concat(SessionId, '.out', Output),
+    atom_concat(SessionId, '.comm', Communication),
     catch(message_queue_destroy(Output), _, true),
+    catch(message_queue_destroy(Communication), _, true),
     forall(current_predicate(SessionId:PI),
         (   memberchk(PI, [read/1, write/1, writeln/1, nl/0])
         ->  true
@@ -118,12 +122,23 @@ input_queue(Input) :-
 %%  output_queue(-QueueName) is det.
 %
 %   The name of the output queue is derived from the session ID too.
-%   (Note that this is also the thread id for goals that are running.)
+%   (Note that the session ID is also the thread id for goals that 
+%   are running.)
 
 output_queue(Output) :-
     http_session_id(SessionId),
     atom_concat(SessionId, '.out', Output).
     
+
+%%  communication_queue(-QueueName) is det.
+%
+%   The name of the communication queue is derived from the session ID too.
+%   (Note that the session ID is also the thread id for goals that are running.)
+
+communication_queue(Communication) :-
+    http_session_id(SessionId),
+    atom_concat(SessionId, '.comm', Communication).
+
     
 %%  prepare_module(+Module) is det.
 %
@@ -151,7 +166,7 @@ prepare_module(Module) :-
 
 :- http_handler(root(prolog/first), first, []).
 :- http_handler(root(prolog/next),  next,  []).
-:- http_handler(root(prolog/input),  input,  []).
+:- http_handler(root(prolog/input),  input_read,  []).
 :- http_handler(root(prolog/stop),  stop,  []).
 :- http_handler(root(prolog/abort), abort, []).
 :- http_handler(root(prolog/result), result, []).
@@ -236,7 +251,7 @@ set_timeout :-
         http_session_retractall(alarmId(_))
     ;   true
     ),
-    alarm(600, (
+    alarm(15, (
             debug(pengine, 'ALARM!!!', []),
             input_queue(Input),
             output_queue(Output),
@@ -372,8 +387,9 @@ input(Term) :-
 
 output(Term) :-
     output_queue(Output),
+    communication_queue(Communication),
     thread_send_message(Output, result(write, Term, _, _, _)),
-    thread_get_message(ack).
+    thread_get_message(Communication, ack).
     
 
 %%   result(+Request) is det.
@@ -391,12 +407,12 @@ result(_Request) :-
 
 output_result :-
     debug(pengine, 'Waiting for result ...', []),
-    input_queue(Input),
     output_queue(Output),
+    communication_queue(Communication),
     thread_get_message(Output, Msg),
     debug(pengine, 'Received: ~q', [Msg]),
     (   arg(1, Msg, write)
-    ->  thread_send_message(Input, ack)
+    ->  thread_send_message(Communication, ack)
     ;   true
     ),
     Msg = result(Success, Message, Bindings, More, Time),
