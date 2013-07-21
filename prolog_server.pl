@@ -70,6 +70,8 @@ server(Port) :-
     format('You can access the server at http://localhost:~w/~n', [Port]).
 
 
+:- http_set_session_options([timeout(600)]).
+
 
 %   When a client session begins, an output queue is created
 %   from which the client will have to fetch all output
@@ -80,6 +82,7 @@ server(Port) :-
 :- listen(http_session(begin(SessionId, _Peer)), begin_session(SessionId)).
     
 begin_session(SessionId) :-
+    debug(pengine, 'Begin session: ~q', [SessionId]),
     atom_concat(SessionId, '.out', Output),
     message_queue_create(Output),
     prepare_module(SessionId).    
@@ -92,6 +95,7 @@ begin_session(SessionId) :-
 :- listen(http_session(end(SessionId, _Peer)), end_session(SessionId)).
 
 end_session(SessionId) :-
+    debug(pengine, 'End session: ~q', [SessionId]),
     catch(thread_signal(SessionId, abort), _, true),
     atom_concat(SessionId, '.out', Output),
     catch(message_queue_destroy(Output), _, true),
@@ -232,7 +236,7 @@ set_timeout :-
         http_session_retractall(alarmId(_))
     ;   true
     ),
-    alarm(15, (
+    alarm(600, (
             debug(pengine, 'ALARM!!!', []),
             input_queue(Input),
             output_queue(Output),
