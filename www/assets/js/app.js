@@ -313,7 +313,7 @@ function loadSrc(url) {
 }
 
 function saveProgram() {
-    var program = getProgram();
+    var program = encodeURIComponent(getProgram());
     if (program) {
         $.post("/storage/store", "program=" + program, function(response) {
             var url = response.url;
@@ -330,7 +330,7 @@ function saveProgram() {
 
 function updateProgram() {
 	var file = window.location.hash.slice(1);
-    var program = getProgram();
+    var program = encodeURIComponent(getProgram());
     if (program) {
          $.post("/storage/update", "file=" + file + "&program=" + program, function() {
 			$('#update-btn').prop('disabled', true);
