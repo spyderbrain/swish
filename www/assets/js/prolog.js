@@ -32,7 +32,7 @@ function PrologQuery(callbacks) {
                 that.ask(query);
             } else {
                 var msg = obj.message;
-                callbacks.onerror.call({success: "error", msg:msg})
+                callbacks.onerror.call({event: "error", msg:msg})
             }
         });
     }    
