@@ -15,8 +15,7 @@
 :- use_module(library(error)).
 :- use_module(library(broadcast)).
 :- use_module(library(time)).
-
-:- use_module(sandbox).
+:- use_module(library(sandbox)).
 
 %:- debug(pengine).
 
@@ -193,6 +192,22 @@ first(Request) :-
     ).
 
 
+:- multifile
+	sandbox:safe_primitive/1,		% Goal
+	sandbox:safe_meta/2.			% Goal, Calls
+
+sandbox:safe_primitive(clpfd:nb_getval(_,_)).
+sandbox:safe_primitive(M:write(_)) :- http_session_id(M).
+sandbox:safe_primitive(M:writeln(_)) :- http_session_id(M).
+sandbox:safe_primitive(M:read(_)) :- http_session_id(M).
+sandbox:safe_primitive(M:nl) :- http_session_id(M).
+sandbox:safe_primitive(system:sleep(_)). 
+sandbox:safe_primitive(system:prompt(_,_)). 
+sandbox:safe_primitive(dif:dif(_,_)).
+sandbox:safe_primitive(clpfd:Pred) :- predicate_property(clpfd:Pred, exported).
+sandbox:safe_primitive(atomic(_)).
+
+
 %%  text_to_goal(+GoalAtom, -Goal, -Bindings) is det.
 %
 %   True if Goal is the term represention of GoalAtom and Bindings
@@ -207,7 +222,8 @@ first(Request) :-
 text_to_goal(GoalAtom, Goal, Bindings) :-
     http_session_id(SessionId),
     catch(
-            (   atom_to_term(GoalAtom, Goal, Bindings),
+            (   %atom_to_term(GoalAtom, Goal, Bindings),
+                read_term_from_atom(GoalAtom, Goal, [variable_names(Bindings)]),
                 safe_goal(SessionId:Goal)
             ),
         Error,
