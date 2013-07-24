@@ -37,9 +37,7 @@ function PrologQuery(callbacks) {
         });
     }    
     this.ask = function(query) {
-        $.get('/prolog/first?goal=' + encodeURIComponent(query), function(obj) {
-            processResponse(obj);
-        });
+        $.get('/prolog/first?goal=' + encodeURIComponent(query), processResponse);
     }
     this.more = function() {
         $.get('/prolog/next', function(obj) {
@@ -47,24 +45,16 @@ function PrologQuery(callbacks) {
         });
     }
     this.input = function(string) {
-        $.get('/prolog/input?input=' + encodeURIComponent(string), function(obj) {
-            processResponse(obj);
-        });
+        $.get('/prolog/input?input=' + encodeURIComponent(string), processResponse);
     }
     this.stop = function() {
-        $.get('/prolog/stop', function(obj) {
-            processResponse(obj);
-        });
+        $.get('/prolog/stop', processResponse);
     }
     this.abort = function() {
-        $.get("/prolog/abort", function(obj) {
-            processResponse(obj);            
-        });
+        $.get("/prolog/abort", processResponse);
     }
     this.result = function() {
-        $.get("/prolog/result", function(obj) {
-            processResponse(obj);            
-        });
+        $.get("/prolog/result", processResponse);
     }
 };
 
