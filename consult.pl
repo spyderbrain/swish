@@ -10,7 +10,7 @@
 :- use_module(library(memfile)).
 :- use_module(library(debug)).
 
-:- use_module(sandbox).
+:- use_module(library(sandbox)).
 
 :- style_check(-atom).
 
