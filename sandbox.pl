@@ -36,8 +36,8 @@
 :- use_module(library(apply_macros), [expand_phrase/2]).
 
 :- multifile
-	safe_primitive/1,		% Goal
-	safe_meta/2.			% Goal, Calls
+	user:safe_primitive/1,		% Goal
+	user:safe_meta/2.			% Goal, Calls
 
 % :- debug(sandbox).
 
@@ -258,15 +258,6 @@ safe_primitive(retractall(X)) :- safe_assert(X).
 % The non-ISO system predicates.  These can be redefined, so we must
 % be careful to ensure the system ones are used.
 
-					% Added by Torbjörn
-
-safe_primitive(_:pengine_input(_)).
-safe_primitive(_:write(_)).
-safe_primitive(_:writeln(_)).
-safe_primitive(_:read(_)).
-safe_primitive(_:nl).
-safe_primitive(system:sleep(_)). 
-safe_primitive(system:prompt(_,_)). 
 
 safe_primitive(system:false).
 safe_primitive(system:cyclic_term(_)).
