@@ -1,4 +1,43 @@
-function Pengine(callbacks) {
+Prolog API
+==========
+
+% Basic
+
+prolog/ask?query=
+prolog/again
+prolog/stop
+prolog/abort
+
+% Support for I/O
+
+prolog/answer
+prolog/read&term=T
+
+% Consult
+
+prolog/consult?program=P
+
+
+LP API
+======
+
+lp/first?goal=G
+lp/next
+lp/stop
+lp/abort
+
+lp/how
+lp/why
+lp/whynot
+
+
+
+
+
+This API is a bit difficult to use since a write response always has to be followed by a request for more result. To relieve the developer of this responsibility, we have designed a JavaScript wrapper that takes care of it all. It furthermore relieves the developer from having to perform URI encoding.
+
+
+function PrologQuery(callbacks) {
     var that = this;
     // Private functions
     function processResponse(obj) {
@@ -10,7 +49,7 @@ function Pengine(callbacks) {
             if (callbacks.onerror) {
                 callbacks.onerror.call(obj)
             }
-        } else if (obj.event === 'output') {
+        } else if (obj.event === 'write') {
            if (callbacks.onoutput) {
                 callbacks.onoutput.call(obj)
            }
@@ -57,4 +96,3 @@ function Pengine(callbacks) {
         $.get("/prolog/result", processResponse);
     }
 };
-
