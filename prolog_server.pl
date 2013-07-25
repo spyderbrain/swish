@@ -38,6 +38,7 @@ listen/2.
 */
 
 :- http_handler(root(swish), http_reply_file('www/app.html', []), [prefix]).
+:- http_handler(root(debug), http_reply_file('www/debug.html', []), [prefix]).
 
 :- multifile user:file_search_path/2.
 :- dynamic   user:file_search_path/2.
@@ -404,7 +405,7 @@ input(Term) :-
 output(Term) :-
     output_queue(Output),
     communication_queue(Communication),
-    thread_send_message(Output, result(write, Term, _, _, _)),
+    thread_send_message(Output, result(output, Term, _, _, _)),
     thread_get_message(Communication, ack).
     
 
@@ -427,7 +428,7 @@ output_result :-
     communication_queue(Communication),
     thread_get_message(Output, Msg),
     debug(pengine, 'Received: ~q', [Msg]),
-    (   arg(1, Msg, write)
+    (   arg(1, Msg, output)
     ->  thread_send_message(Communication, ack)
     ;   true
     ),
@@ -452,8 +453,8 @@ output_result(halted, Message0, _Bindings0, _More0, _Time0) :-
     reply_json(json([event=halted, msg=Message0])).
 output_result(prompt, Message0, _Bindings0, _More0, _Time0) :-
     reply_json(json([event=prompt, msg=Message0])).
-output_result(write, Message0, _Bindings0, _More0, _Time0) :-
-    reply_json(json([event=write, msg=Message0])).
+output_result(output, Message0, _Bindings0, _More0, _Time0) :-
+    reply_json(json([event=output, msg=Message0])).
 
 
 bindings_to_json(BindingsIn, json(BindingsOut)) :-

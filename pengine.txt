@@ -1,0 +1,45 @@
+Repeatedly, I have been telling people on this list that I regards the underlying api as by far the most important part of the project. So let me explain in more detail why I think this is the case. 
+
+The Pengine library.
+
+"Pengine" is a word in Swahili that means "at another place", "at another time", "elsewhere", "sometimes", "maybe", "perhaps", "possibly" or something like that. 
+
+
+Well, the thing is that on top of the pengine lib, any conceivable web app can be written, even by those who know very little Prolog.
+
+A live tutorial!!! 
+
+Implement in XSB-Prolog as well!
+
+
+http://coding.smashingmagazine.com/2012/12/05/client-side-templating/
+
+"Using templates in the browser is becoming more and more widespread. Moving application logic from the server to the client, and the increasing usage of MVC-like patterns (model–view–controller) inspired templates to embrace the browser. This used to be a server-side only affair, but templates are actually very powerful and expressive in client-side development as well."
+
+Conclusion
+We have seen many strengths of client-side templating, including:
+
+Application servers and APIs are best at serving just the data (i.e. JSON); client-side templates fit in perfectly.
+
+HTML and JavaScript naturally match the skills of client-side developers.
+
+Using templates enforces a good practice of separating presentation and logic.
+
+The templates can be fully precompiled and cached, this leaves only the actual data to be refreshed from server.
+
+Moving the rendering phase from server to client may positively affect performance.
+
+
+I have a hard time imagining much being easier to maintain than straight HTML and JavaScript with a server that does nothing but serve JSON.
+
+Google's AngularJS
+
+Things we could build on top of this:
+
+- Live Prolog tutorials
+- Collaborative editing of Prolog programs
+- Web access to theorem provers such as LeanTap and Satchmo
+- Semantic Web applications (using Jan's stuff of course)
+- 
+
+

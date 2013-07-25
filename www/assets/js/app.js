@@ -23,7 +23,7 @@ env.cmdline.renderer.setShowGutter(false);
 env.cmdline.getSession().setUseWrapMode(true);
 env.cmdline.session.setWrapLimitRange(null, null);
 
-env.prolog = new PrologQuery({
+env.prolog = new Pengine({
     onanswer: handleAnswer,
     onhalted: handleHalted,
     onprompt: handlePrompt,

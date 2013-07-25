@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SWISH</title>
+    <meta name="description" content="">
+    <meta name="author" content="Torbjörn Lager">
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <script src="vendor/bootstrap/js/jquery.js"></script>
+    <script type="text/javascript" src="assets/js/prolog.js" charset="utf-8"></script>
+	<script>
+	
+	var prolog = new PrologQuery({
+    	onanswer: handleAnswer,
+    	onhalted: handleHalted,
+    	onprompt: handlePrompt,
+    	onoutput: handleOutput,
+    	onerror: handleError
+	});
+	
+	function handleAnswer() {
+		console.log(this)
+	}
+	
+	function handleHalted() {
+		console.log(this)
+	}	
+
+	function handlePrompt() {
+		console.log(this)
+	}
+	
+	function handleOutput() {
+		console.log(this)
+	}
+	
+	function handleError() {
+		console.log(this)
+	}
+	
+	prolog.ask("member(X, [a, b, c])");
+	
+	
+	</script>
+  </head>
+  <body>
+  </body>
+</html>
