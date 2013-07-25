@@ -40,9 +40,7 @@ function PrologQuery(callbacks) {
         $.get('/prolog/first?goal=' + encodeURIComponent(query), processResponse);
     }
     this.more = function() {
-        $.get('/prolog/next', function(obj) {
-            processResponse(obj);
-        });
+        $.get('/prolog/next', processResponse);
     }
     this.input = function(string) {
         $.get('/prolog/input?input=' + encodeURIComponent(string), processResponse);
