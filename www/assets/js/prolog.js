@@ -12,7 +12,7 @@ function Pengine(callbacks) {
             }
         } else if (obj.event === 'output') {
            if (callbacks.onoutput) {
-                callbacks.onoutput.call(obj)
+                callbacks.onoutput.call(obj) 
            }
            that.result();
         } else if (obj.event === 'prompt') {
